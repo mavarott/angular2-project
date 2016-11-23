@@ -23,13 +23,27 @@ System.register(['@angular/core', './book-manager.service'], function(exports_1,
         execute: function() {
             BookManagerComponent = (function () {
                 function BookManagerComponent(bms) {
+                    this.bms = bms;
                     this.books = [];
-                    this.books = bms.getBooks();
+                    this.getBooks();
                 }
+                BookManagerComponent.prototype.getBooks = function () {
+                    var _this = this;
+                    this.bms.getBooks()
+                        .then(function (books) { return _this.books = books; })
+                        .catch(this.handleError);
+                };
+                BookManagerComponent.prototype.handleError = function (error) {
+                    console.error('Cannot assign books', error);
+                    return Promise.reject(error.message || error);
+                };
                 BookManagerComponent = __decorate([
                     core_1.Component({
                         templateUrl: '../../templates/book-manager.component.html',
-                        providers: [book_manager_service_1.BookManagerService]
+                        providers: [book_manager_service_1.BookManagerService],
+                        styles: [
+                            ".vl-centered {\n            vertical-align: middle;\n        }\n        .vl-new {\n            background-color: #28b62c;\n        }\n        .vl-unavailable {\n            background-color: #ff4136;\n        }"
+                        ]
                     }),
                     __param(0, core_1.Inject(book_manager_service_1.BookManagerService))
                 ], BookManagerComponent);

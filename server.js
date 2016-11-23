@@ -28,7 +28,42 @@ server.register(require('inert'), (err) => {
             //listing: true
         }
     }
-});
+    });
+
+    // to test http requests in angular 2
+    server.route({  
+    method: 'GET',
+    path:'/books',
+    handler: function (request, reply) {
+
+        return reply([
+                {
+                    id: 3,
+                    title: 'Il vecchio e il mare',
+                    author: 'Ernest Hemingway',
+                    rating: 4.5,
+                    isNew: true,
+                    isAvailable: true
+                },
+                {
+                    id: 16,
+                    title: 'Harry Potter e la pietra filosofale',
+                    author: 'J.K. Rowling',
+                    rating: 4.1,
+                    isNew: false,
+                    isAvailable: true
+                },
+                {
+                    id: 9,
+                    title: 'Il ritratto di Dorian Gray',
+                    author: 'Oscar Wilde',
+                    rating: 4.2,
+                    isNew: true,
+                    isAvailable: false
+                }
+            ]);
+    }
+    });
 
 })
 
