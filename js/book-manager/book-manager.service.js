@@ -1,4 +1,4 @@
-System.register(['@angular/core', '@angular/http', 'rxjs/add/operator/toPromise'], function(exports_1, context_1) {
+System.register(['@angular/core', '@angular/http', 'rxjs/Rx'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -11,7 +11,7 @@ System.register(['@angular/core', '@angular/http', 'rxjs/add/operator/toPromise'
         return function (target, key) { decorator(target, key, paramIndex); }
     };
     var core_1, http_1;
-    var BookManagerService;
+    var headers, options, BookManagerService;
     return {
         setters:[
             function (core_1_1) {
@@ -36,19 +36,29 @@ System.register(['@angular/core', '@angular/http', 'rxjs/add/operator/toPromise'
             //         rating: 4.7
             //     }
             // ];
+            headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+            options = new http_1.RequestOptions({ headers: headers });
             BookManagerService = (function () {
                 function BookManagerService(http) {
                     this.http = http;
                 }
+                // getBooks(): Promise<Book[]> {
+                //     return this.http.get('books')
+                //            .toPromise()
+                //            .then(response => response.json() as Book[])
+                //            .catch(this.handleError);
+                // }
                 BookManagerService.prototype.getBooks = function () {
-                    return this.http.get('books')
-                        .toPromise()
-                        .then(function (response) { return response.json(); })
-                        .catch(this.handleError);
+                    return this.http.get('books', options)
+                        .map(function (response) { return response.json(); });
                 };
-                BookManagerService.prototype.handleError = function (error) {
-                    console.error('Cannot get books', error);
-                    return Promise.reject(error.message || error);
+                BookManagerService.prototype.saveBook = function (book) {
+                    return this.http.post('book', book, options)
+                        .map(function (response) { return response.json(); });
+                };
+                BookManagerService.prototype.deleteBook = function (id, rev) {
+                    return this.http.delete('book?id=' + id + '&rev=' + rev, options)
+                        .map(function (response) { return response.json(); });
                 };
                 BookManagerService = __decorate([
                     core_1.Injectable(),

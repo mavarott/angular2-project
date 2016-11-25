@@ -1,3 +1,73 @@
+<div id="headerRow" class="row">
+  <div class="col-xs-3">
+    <a href="#newBookForm" id="addBookButton" class="btn btn-success" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="newBookForm">
+      Add new Book
+    </a>
+  </div>
+  <div class="col-xs-7">
+    <input type="text" class="form-control">
+  </div>
+  <div class="col-xs-2">
+    <button id="searchButton" class="btn btn-default button-wide" type="button">Search Book</button>
+  </div>
+</div>
+<div class="collapse" id="newBookForm">
+  <div class="well">
+    <form class="form-horizontal" #form="ngForm" (ngSubmit)="addBook(form.value)">
+      <fieldset>
+        <div class="form-group">
+          <div class="row">
+              <label for="bookId" class="col-lg-2 control-label">Id</label>
+              <div class="col-lg-10">
+                <input type="number" class="form-control" id="bookId" placeholder="Id" [(ngModel)]="id" name="id" required>
+              </div>
+          </div>
+          <div class="row">
+              <label for="bookTitle" class="col-lg-2 control-label">Title</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control" id="bookTitle" placeholder="Title" [(ngModel)]="title" name="title" required>
+              </div>
+          </div>
+          <div class="row">
+              <label for="bookAuthor" class="col-lg-2 control-label">Author</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control" id="bookAuthor" placeholder="Author" [(ngModel)]="author" name="author" required>
+              </div>
+          </div>
+          <div class="row">
+              <label for="bookRating" class="col-lg-2 control-label">Rating</label>
+              <div class="col-lg-10">
+                <input type="number" min="0" max="5" step="0.1" class="form-control" id="bookRating" placeholder="Rating" [(ngModel)]="rating" name="rating">
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-2 col-lg-offset-2">
+              <div class="checkbox">
+                <label><input type="checkbox" [(ngModel)]="isNew" name="isNew"> New</label>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <div class="checkbox">
+                <label><input type="checkbox" [(ngModel)]="isAvailable" name="isAvailable"> Available</label>
+              </div>
+            </div>
+            <div class="col-lg-1 col-lg-offset-3">
+              <button type="button" class="btn btn-default" (click)="cancel()">
+                Cancel
+              </button>
+            </div>
+            <div class="col-lg-2">
+              <button [disabled]="!form.form.valid" type="submit" class="btn btn-success button-wide">
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
 <table class="table table-striped table-hover ">
   <thead>
     <tr>
@@ -6,6 +76,7 @@
       <th>Title</th>
       <th>Author</th>
       <th>Rating</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -25,6 +96,12 @@
       <td>{{ book.title }}</td>
       <td>{{ book.author }}</td>
       <td>{{ book.rating }}</td>
+      <td>
+        <a type="button" class="btn btn-primary"(click)="setBookFields(book)">
+          Modify
+        </a>
+        <button type="button" class="btn btn-default" (click)="removeBook(book._id, book._rev)">Remove</button>
+      </td>
     </tr>
   </tbody>
 </table>

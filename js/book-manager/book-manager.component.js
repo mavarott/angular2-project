@@ -24,25 +24,55 @@ System.register(['@angular/core', './book-manager.service'], function(exports_1,
             BookManagerComponent = (function () {
                 function BookManagerComponent(bms) {
                     this.bms = bms;
-                    this.books = [];
+                    this.rating = 3.5;
+                    this.isNew = false;
+                    this.isAvailable = false;
                     this.getBooks();
                 }
                 BookManagerComponent.prototype.getBooks = function () {
                     var _this = this;
-                    this.bms.getBooks()
-                        .then(function (books) { return _this.books = books; })
-                        .catch(this.handleError);
+                    var booksObservable = this.bms.getBooks();
+                    booksObservable.subscribe(function (books) { return _this.books = books; }, function (error) { return console.log('error in book service manager during books fetching'); }, function () { return console.log('books fetched successfully'); });
                 };
-                BookManagerComponent.prototype.handleError = function (error) {
-                    console.error('Cannot assign books', error);
-                    return Promise.reject(error.message || error);
+                BookManagerComponent.prototype.addBook = function (newBook) {
+                    var _this = this;
+                    var bookObservable = this.bms.saveBook(newBook);
+                    bookObservable.subscribe(function (book) { return _this.books.push(book); }, function (error) { return console.log('error in book service manager during book insertion'); }, function () { return console.log('book inserted successfully'); });
+                    document.getElementById('addBookButton').click();
+                    this.resetFields();
+                };
+                BookManagerComponent.prototype.removeBook = function (id, rev) {
+                    var _this = this;
+                    var bookObservable = this.bms.deleteBook(id, rev);
+                    bookObservable.subscribe(function (book) { return _this.books.splice(_this.books.indexOf(book), 1); }, function (error) { return console.log('error in book service manager during book deletion'); }, function () { return console.log('book removed successfully'); });
+                };
+                BookManagerComponent.prototype.setBookFields = function (book) {
+                    this.id = book.id;
+                    this.title = book.title;
+                    this.author = book.author;
+                    this.rating = book.rating;
+                    this.isNew = book.isNew;
+                    this.isAvailable = book.isAvailable;
+                    document.getElementById('addBookButton').click();
+                };
+                BookManagerComponent.prototype.resetFields = function () {
+                    delete this.id;
+                    delete this.title;
+                    delete this.author;
+                    this.rating = 3.5;
+                    this.isNew = false;
+                    this.isAvailable = false;
+                };
+                BookManagerComponent.prototype.cancel = function () {
+                    document.getElementById('addBookButton').click();
+                    this.resetFields();
                 };
                 BookManagerComponent = __decorate([
                     core_1.Component({
                         templateUrl: '../../templates/book-manager.component.html',
                         providers: [book_manager_service_1.BookManagerService],
                         styles: [
-                            ".vl-centered {\n            vertical-align: middle;\n        }\n        .vl-new {\n            background-color: #28b62c;\n        }\n        .vl-unavailable {\n            background-color: #ff4136;\n        }"
+                            "\n        .form-group .row {\n            margin-right: 0;\n            margin-left: 0;\n            margin-bottom: 15px;\n        }\n        #headerRow {\n            margin-bottom: 30px;\n        }\n        .button-wide {\n            width: 100%;\n        }\n        .vl-centered {\n            vertical-align: middle;\n        }\n        .vl-new {\n            background-color: #28b62c;\n        }\n        .vl-unavailable {\n            background-color: #ff4136;\n        }\n        .ng-valid[required], .ng-valid.required  {\n        border-left: 5px solid #42A948; /* green */\n        }\n        .ng-invalid:not(form)  {\n        border-left: 5px solid #a94442; /* red */\n        }\n        "
                         ]
                     }),
                     __param(0, core_1.Inject(book_manager_service_1.BookManagerService))

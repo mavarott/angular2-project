@@ -3,4 +3,6 @@ export class Book {
     title: string;
     author: string;
     rating: number;
+    isNew: boolean;
+    isAvailable: boolean;
 }
